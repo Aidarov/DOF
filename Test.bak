@@ -1,0 +1,940 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 14.2
+-- Dumped by pg_dump version 14.2
+
+-- Started on 2022-08-06 13:45:03
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- TOC entry 224 (class 1259 OID 16461)
+-- Name: device_paths; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.device_paths (
+    id integer NOT NULL,
+    longitude numeric(24,8) NOT NULL,
+    latitude numeric(24,8) NOT NULL,
+    time_stamp timestamp without time zone NOT NULL,
+    device_id integer NOT NULL,
+    accepted_at timestamp without time zone NOT NULL,
+    uid character varying(128) NOT NULL
+);
+
+
+ALTER TABLE public.device_paths OWNER TO postgres;
+
+--
+-- TOC entry 223 (class 1259 OID 16460)
+-- Name: device_paths_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.device_paths_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.device_paths_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3413 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: device_paths_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.device_paths_id_seq OWNED BY public.device_paths.id;
+
+
+--
+-- TOC entry 222 (class 1259 OID 16452)
+-- Name: devices; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.devices (
+    id integer NOT NULL,
+    name character varying(128) NOT NULL,
+    model character varying(256) NOT NULL,
+    serial_number character varying(128) NOT NULL,
+    photo_path character varying(2048) NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    created_by integer NOT NULL,
+    is_deleted boolean NOT NULL,
+    deleted_at timestamp without time zone,
+    deleted_by integer,
+    token uuid NOT NULL,
+    client_app_version character varying(16),
+    activated boolean,
+    activated_at timestamp without time zone
+);
+
+
+ALTER TABLE public.devices OWNER TO postgres;
+
+--
+-- TOC entry 221 (class 1259 OID 16451)
+-- Name: devices_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.devices_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.devices_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3414 (class 0 OID 0)
+-- Dependencies: 221
+-- Name: devices_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.devices_id_seq OWNED BY public.devices.id;
+
+
+--
+-- TOC entry 218 (class 1259 OID 16428)
+-- Name: equipment_values; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.equipment_values (
+    id integer NOT NULL,
+    equipment_id integer NOT NULL,
+    value double precision NOT NULL,
+    captured_at timestamp without time zone NOT NULL,
+    longitude double precision NOT NULL,
+    latitude double precision NOT NULL,
+    accepted_at timestamp without time zone NOT NULL,
+    sender_token character varying(256) NOT NULL
+);
+
+
+ALTER TABLE public.equipment_values OWNER TO postgres;
+
+--
+-- TOC entry 217 (class 1259 OID 16427)
+-- Name: equipment_values_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.equipment_values_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.equipment_values_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3415 (class 0 OID 0)
+-- Dependencies: 217
+-- Name: equipment_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.equipment_values_id_seq OWNED BY public.equipment_values.id;
+
+
+--
+-- TOC entry 228 (class 1259 OID 16475)
+-- Name: measures; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.measures (
+    id bigint NOT NULL,
+    trub_dav numeric(18,6),
+    trub_temp numeric(18,6),
+    zatrub_dav numeric(18,6),
+    zatrub_temp numeric(18,6),
+    temp_pos_shtut numeric(18,6),
+    dav_na_mkp numeric(18,6),
+    longitude numeric(24,8) NOT NULL,
+    latitude numeric(24,8) NOT NULL,
+    created_by integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    dav_pos_shtut numeric(18,6),
+    accepted_at timestamp without time zone NOT NULL,
+    device_id integer NOT NULL,
+    oil_well_id integer NOT NULL
+);
+
+
+ALTER TABLE public.measures OWNER TO postgres;
+
+--
+-- TOC entry 227 (class 1259 OID 16474)
+-- Name: measures_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.measures_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.measures_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3416 (class 0 OID 0)
+-- Dependencies: 227
+-- Name: measures_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.measures_id_seq OWNED BY public.measures.id;
+
+
+--
+-- TOC entry 216 (class 1259 OID 16417)
+-- Name: oil_well_equipments; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.oil_well_equipments (
+    id integer NOT NULL,
+    name character varying(128) NOT NULL,
+    code character varying(64) NOT NULL,
+    is_deleted boolean NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    created_by integer NOT NULL,
+    oil_well_id integer NOT NULL,
+    short_name character varying(16) NOT NULL,
+    equipment_type integer NOT NULL
+);
+
+
+ALTER TABLE public.oil_well_equipments OWNER TO postgres;
+
+--
+-- TOC entry 215 (class 1259 OID 16416)
+-- Name: oil_equipment_types_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.oil_equipment_types_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.oil_equipment_types_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3417 (class 0 OID 0)
+-- Dependencies: 215
+-- Name: oil_equipment_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.oil_equipment_types_id_seq OWNED BY public.oil_well_equipments.id;
+
+
+--
+-- TOC entry 212 (class 1259 OID 16403)
+-- Name: oil_fields; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.oil_fields (
+    id integer NOT NULL,
+    name character varying(128) NOT NULL,
+    short_name character varying(16) NOT NULL,
+    code character varying(64) NOT NULL,
+    is_deleted boolean NOT NULL,
+    deleted_by integer,
+    deleted_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    created_by integer NOT NULL
+);
+
+
+ALTER TABLE public.oil_fields OWNER TO postgres;
+
+--
+-- TOC entry 211 (class 1259 OID 16402)
+-- Name: oil_fields_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.oil_fields_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.oil_fields_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3418 (class 0 OID 0)
+-- Dependencies: 211
+-- Name: oil_fields_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.oil_fields_id_seq OWNED BY public.oil_fields.id;
+
+
+--
+-- TOC entry 214 (class 1259 OID 16410)
+-- Name: oil_wells; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.oil_wells (
+    id integer NOT NULL,
+    name character varying(128) NOT NULL,
+    short_name character varying(16) NOT NULL,
+    code character varying(64) NOT NULL,
+    latitude numeric(24,8) NOT NULL,
+    longitude numeric(24,8) NOT NULL,
+    is_deleted boolean NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    created_by integer NOT NULL,
+    oil_field_id integer NOT NULL,
+    deleted_at timestamp without time zone,
+    deleted_by integer
+);
+
+
+ALTER TABLE public.oil_wells OWNER TO postgres;
+
+--
+-- TOC entry 213 (class 1259 OID 16409)
+-- Name: oil_wells_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.oil_wells_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.oil_wells_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3419 (class 0 OID 0)
+-- Dependencies: 213
+-- Name: oil_wells_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.oil_wells_id_seq OWNED BY public.oil_wells.id;
+
+
+--
+-- TOC entry 226 (class 1259 OID 16468)
+-- Name: tablet_user_session; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.tablet_user_session (
+    id integer NOT NULL,
+    device_id integer NOT NULL,
+    tablet_user_id integer NOT NULL,
+    login_time timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.tablet_user_session OWNER TO postgres;
+
+--
+-- TOC entry 225 (class 1259 OID 16467)
+-- Name: tablet_user_session_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.tablet_user_session_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tablet_user_session_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3420 (class 0 OID 0)
+-- Dependencies: 225
+-- Name: tablet_user_session_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.tablet_user_session_id_seq OWNED BY public.tablet_user_session.id;
+
+
+--
+-- TOC entry 220 (class 1259 OID 16435)
+-- Name: tablet_users; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.tablet_users (
+    id integer NOT NULL,
+    login character varying(64) NOT NULL,
+    first_name character varying(64) NOT NULL,
+    last_name character varying(64) NOT NULL,
+    middle_name character varying(64) NOT NULL,
+    password character varying(256) NOT NULL,
+    salt character varying(128) NOT NULL
+);
+
+
+ALTER TABLE public.tablet_users OWNER TO postgres;
+
+--
+-- TOC entry 219 (class 1259 OID 16434)
+-- Name: tablet_users_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.tablet_users_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tablet_users_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3421 (class 0 OID 0)
+-- Dependencies: 219
+-- Name: tablet_users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.tablet_users_id_seq OWNED BY public.tablet_users.id;
+
+
+--
+-- TOC entry 230 (class 1259 OID 24675)
+-- Name: user_sessions; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.user_sessions (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    token uuid NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    ip_address character varying(17) NOT NULL,
+    expires_at timestamp without time zone NOT NULL,
+    is_blocked boolean NOT NULL
+);
+
+
+ALTER TABLE public.user_sessions OWNER TO postgres;
+
+--
+-- TOC entry 229 (class 1259 OID 24674)
+-- Name: user_sessions_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.user_sessions_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.user_sessions_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3422 (class 0 OID 0)
+-- Dependencies: 229
+-- Name: user_sessions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.user_sessions_id_seq OWNED BY public.user_sessions.id;
+
+
+--
+-- TOC entry 210 (class 1259 OID 16396)
+-- Name: users; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.users (
+    id integer NOT NULL,
+    login character varying(64) NOT NULL,
+    first_name character varying(64) NOT NULL,
+    last_name character varying(64) NOT NULL,
+    middle_name character varying(64),
+    created_at timestamp without time zone NOT NULL,
+    created_by integer,
+    is_blocked boolean NOT NULL,
+    email character varying(64) NOT NULL,
+    role_id integer NOT NULL,
+    salt character varying(128),
+    password character varying(128)
+);
+
+
+ALTER TABLE public.users OWNER TO postgres;
+
+--
+-- TOC entry 209 (class 1259 OID 16395)
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.users_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.users_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3423 (class 0 OID 0)
+-- Dependencies: 209
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
+
+
+--
+-- TOC entry 3221 (class 2604 OID 16464)
+-- Name: device_paths id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.device_paths ALTER COLUMN id SET DEFAULT nextval('public.device_paths_id_seq'::regclass);
+
+
+--
+-- TOC entry 3220 (class 2604 OID 16455)
+-- Name: devices id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.devices ALTER COLUMN id SET DEFAULT nextval('public.devices_id_seq'::regclass);
+
+
+--
+-- TOC entry 3218 (class 2604 OID 16431)
+-- Name: equipment_values id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.equipment_values ALTER COLUMN id SET DEFAULT nextval('public.equipment_values_id_seq'::regclass);
+
+
+--
+-- TOC entry 3223 (class 2604 OID 16478)
+-- Name: measures id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.measures ALTER COLUMN id SET DEFAULT nextval('public.measures_id_seq'::regclass);
+
+
+--
+-- TOC entry 3215 (class 2604 OID 16406)
+-- Name: oil_fields id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.oil_fields ALTER COLUMN id SET DEFAULT nextval('public.oil_fields_id_seq'::regclass);
+
+
+--
+-- TOC entry 3217 (class 2604 OID 16420)
+-- Name: oil_well_equipments id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.oil_well_equipments ALTER COLUMN id SET DEFAULT nextval('public.oil_equipment_types_id_seq'::regclass);
+
+
+--
+-- TOC entry 3216 (class 2604 OID 16413)
+-- Name: oil_wells id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.oil_wells ALTER COLUMN id SET DEFAULT nextval('public.oil_wells_id_seq'::regclass);
+
+
+--
+-- TOC entry 3222 (class 2604 OID 16471)
+-- Name: tablet_user_session id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tablet_user_session ALTER COLUMN id SET DEFAULT nextval('public.tablet_user_session_id_seq'::regclass);
+
+
+--
+-- TOC entry 3219 (class 2604 OID 16438)
+-- Name: tablet_users id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tablet_users ALTER COLUMN id SET DEFAULT nextval('public.tablet_users_id_seq'::regclass);
+
+
+--
+-- TOC entry 3224 (class 2604 OID 24678)
+-- Name: user_sessions id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_sessions ALTER COLUMN id SET DEFAULT nextval('public.user_sessions_id_seq'::regclass);
+
+
+--
+-- TOC entry 3214 (class 2604 OID 16399)
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- TOC entry 3401 (class 0 OID 16461)
+-- Dependencies: 224
+-- Data for Name: device_paths; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.device_paths (id, longitude, latitude, time_stamp, device_id, accepted_at, uid) FROM stdin;
+1	23.44400000	39.90800000	2022-07-21 17:00:55.549	1	2022-07-21 17:00:55.549	3fa85f64-5717-4562-b3fc-2c963f66afa6
+2	23.44400000	39.90800000	2022-07-21 17:00:55.549	1	2022-07-21 17:00:55.549	3fa85f64-5717-4562-b3fc-2c963f66afa1
+3	23.44400000	39.90800000	2022-07-21 17:00:55.549	1	2022-07-21 17:00:55.549	3fa85f64-5717-4562-b3fc-2c963f66afa2
+4	23.44400000	39.90800000	2022-07-21 17:00:55.549	1	2022-07-21 17:00:55.549	3fa85f64-5717-4562-b3fc-2c963f66afa3
+5	23.44400000	39.90800000	2022-07-21 17:00:55.549	1	2022-07-21 17:00:55.549	3fa85f64-5717-4562-b3fc-2c963f66afa4
+6	23.44400000	39.90800000	2022-07-21 17:00:55.549	1	2022-07-21 17:00:55.549	3fa85f64-5717-4562-b3fc-2c963f66afa5
+7	23.44400000	39.90800000	2022-07-21 17:00:55.549	1	2022-07-21 17:00:55.549	3fa85f64-5717-4562-b3fc-2c963f66afa7
+8	23.44400000	39.90800000	2022-07-21 17:00:55.549	1	2022-07-21 17:00:55.549	3fa85f64-5717-4562-b3fc-2c963f66afa8
+9	23.44400000	39.90800000	2022-07-21 17:00:55.549	1	2022-07-21 17:00:55.549	3fa85f64-5717-4562-b3fc-2c963f66afa9
+\.
+
+
+--
+-- TOC entry 3399 (class 0 OID 16452)
+-- Dependencies: 222
+-- Data for Name: devices; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.devices (id, name, model, serial_number, photo_path, created_at, created_by, is_deleted, deleted_at, deleted_by, token, client_app_version, activated, activated_at) FROM stdin;
+1	name	model	serialNumber	photoPath	2022-07-21 21:59:10.594067	0	f	\N	\N	3fa85f64-5717-4562-b3fc-2c963f66afa6	\N	\N	\N
+\.
+
+
+--
+-- TOC entry 3395 (class 0 OID 16428)
+-- Dependencies: 218
+-- Data for Name: equipment_values; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.equipment_values (id, equipment_id, value, captured_at, longitude, latitude, accepted_at, sender_token) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3405 (class 0 OID 16475)
+-- Dependencies: 228
+-- Data for Name: measures; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.measures (id, trub_dav, trub_temp, zatrub_dav, zatrub_temp, temp_pos_shtut, dav_na_mkp, longitude, latitude, created_by, created_at, dav_pos_shtut, accepted_at, device_id, oil_well_id) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3389 (class 0 OID 16403)
+-- Dependencies: 212
+-- Data for Name: oil_fields; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.oil_fields (id, name, short_name, code, is_deleted, deleted_by, deleted_at, created_at, created_by) FROM stdin;
+3	Южный Харикелди	ЮХ	S-KH	f	\N	\N	0001-01-01 00:00:00	0
+\.
+
+
+--
+-- TOC entry 3393 (class 0 OID 16417)
+-- Dependencies: 216
+-- Data for Name: oil_well_equipments; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.oil_well_equipments (id, name, code, is_deleted, created_at, created_by, oil_well_id, short_name, equipment_type) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3391 (class 0 OID 16410)
+-- Dependencies: 214
+-- Data for Name: oil_wells; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.oil_wells (id, name, short_name, code, latitude, longitude, is_deleted, created_at, created_by, oil_field_id, deleted_at, deleted_by) FROM stdin;
+1	string	string	string	18.00260000	34.34400000	f	2022-07-21 21:43:03.160261	0	3	\N	\N
+\.
+
+
+--
+-- TOC entry 3403 (class 0 OID 16468)
+-- Dependencies: 226
+-- Data for Name: tablet_user_session; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.tablet_user_session (id, device_id, tablet_user_id, login_time) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3397 (class 0 OID 16435)
+-- Dependencies: 220
+-- Data for Name: tablet_users; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.tablet_users (id, login, first_name, last_name, middle_name, password, salt) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3407 (class 0 OID 24675)
+-- Dependencies: 230
+-- Data for Name: user_sessions; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.user_sessions (id, user_id, token, created_at, ip_address, expires_at, is_blocked) FROM stdin;
+2	1	af6f9ccf-7ef4-4058-84de-4222cd7b6652	2022-07-19 21:23:45.297284	::1	2022-08-03 21:23:45.29729	f
+4	1	64353f5b-8782-4f6b-a7bb-1ed756f3ea7c	2022-07-21 21:02:04.400521	::1	2022-08-05 21:02:04.400898	f
+\.
+
+
+--
+-- TOC entry 3387 (class 0 OID 16396)
+-- Dependencies: 210
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.users (id, login, first_name, last_name, middle_name, created_at, created_by, is_blocked, email, role_id, salt, password) FROM stdin;
+1	string	string	string	string	2022-07-19 20:36:49.612273	\N	f	string	1	wiK4BVo8gDjN985jYzwPyQ==	JGZeg92ALNcRK9Rhr3VwgB1ADLjyqdNjZNot0tLjnIk=
+\.
+
+
+--
+-- TOC entry 3424 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: device_paths_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.device_paths_id_seq', 9, true);
+
+
+--
+-- TOC entry 3425 (class 0 OID 0)
+-- Dependencies: 221
+-- Name: devices_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.devices_id_seq', 1, true);
+
+
+--
+-- TOC entry 3426 (class 0 OID 0)
+-- Dependencies: 217
+-- Name: equipment_values_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.equipment_values_id_seq', 1, false);
+
+
+--
+-- TOC entry 3427 (class 0 OID 0)
+-- Dependencies: 227
+-- Name: measures_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.measures_id_seq', 1, false);
+
+
+--
+-- TOC entry 3428 (class 0 OID 0)
+-- Dependencies: 215
+-- Name: oil_equipment_types_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.oil_equipment_types_id_seq', 1, false);
+
+
+--
+-- TOC entry 3429 (class 0 OID 0)
+-- Dependencies: 211
+-- Name: oil_fields_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.oil_fields_id_seq', 3, true);
+
+
+--
+-- TOC entry 3430 (class 0 OID 0)
+-- Dependencies: 213
+-- Name: oil_wells_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.oil_wells_id_seq', 1, true);
+
+
+--
+-- TOC entry 3431 (class 0 OID 0)
+-- Dependencies: 225
+-- Name: tablet_user_session_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.tablet_user_session_id_seq', 1, false);
+
+
+--
+-- TOC entry 3432 (class 0 OID 0)
+-- Dependencies: 219
+-- Name: tablet_users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.tablet_users_id_seq', 1, false);
+
+
+--
+-- TOC entry 3433 (class 0 OID 0)
+-- Dependencies: 229
+-- Name: user_sessions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.user_sessions_id_seq', 4, true);
+
+
+--
+-- TOC entry 3434 (class 0 OID 0)
+-- Dependencies: 209
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.users_id_seq', 1, true);
+
+
+--
+-- TOC entry 3240 (class 2606 OID 16466)
+-- Name: device_paths device_paths_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.device_paths
+    ADD CONSTRAINT device_paths_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3238 (class 2606 OID 16459)
+-- Name: devices devices_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.devices
+    ADD CONSTRAINT devices_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3234 (class 2606 OID 16433)
+-- Name: equipment_values equipment_values_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.equipment_values
+    ADD CONSTRAINT equipment_values_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3244 (class 2606 OID 16480)
+-- Name: measures measures_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.measures
+    ADD CONSTRAINT measures_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3232 (class 2606 OID 16422)
+-- Name: oil_well_equipments oil_equipment_types_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.oil_well_equipments
+    ADD CONSTRAINT oil_equipment_types_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3228 (class 2606 OID 16408)
+-- Name: oil_fields oil_fields_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.oil_fields
+    ADD CONSTRAINT oil_fields_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3230 (class 2606 OID 16415)
+-- Name: oil_wells oil_wells_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.oil_wells
+    ADD CONSTRAINT oil_wells_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3242 (class 2606 OID 16473)
+-- Name: tablet_user_session tablet_user_session_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tablet_user_session
+    ADD CONSTRAINT tablet_user_session_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3236 (class 2606 OID 16442)
+-- Name: tablet_users tablet_users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tablet_users
+    ADD CONSTRAINT tablet_users_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3246 (class 2606 OID 24680)
+-- Name: user_sessions user_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_sessions
+    ADD CONSTRAINT user_sessions_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3226 (class 2606 OID 16401)
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+-- Completed on 2022-08-06 13:45:03
+
+--
+-- PostgreSQL database dump complete
+--
+
